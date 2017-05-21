@@ -43,7 +43,7 @@ to quickly create a Cobra application.`,
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	if err := RootCmd.Execute(); err != nil {
-		fmt.Println(err)
+		// fmt.Fprintln(os.Stderr, err)
 		os.Exit(-1)
 	}
 }
@@ -60,7 +60,7 @@ func init() {
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.s3web.yaml)")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
-	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 	RootCmd.PersistentFlags().BoolP("verbose", "v", false, "Log more stuff")
 	RootCmd.PersistentFlags().StringP("bucket", "b", "", "Bucket to operate against")
