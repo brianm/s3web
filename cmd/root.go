@@ -20,11 +20,11 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
+	"strings"
 )
 
 var cfgFile string
 
-// RootCmd represents the base command when called without any subcommands
 var RootCmd = &cobra.Command{
 	Use:   "s3web",
 	Short: "A brief description of your application",
@@ -34,9 +34,9 @@ examples and usage of using your application. For example:
 Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
-// Uncomment the following line if your bare application
-// has an action associated with it:
-//	Run: func(cmd *cobra.Command, args []string) { },
+	// Uncomment the following line if your bare application
+	// has an action associated with it:
+	//	Run: func(cmd *cobra.Command, args []string) { },
 }
 
 // Execute adds all child commands to the root command sets flags appropriately.
@@ -49,6 +49,8 @@ func Execute() {
 }
 
 func init() {
+	viper.SetEnvKeyReplacer(strings.NewReplacer("-", "_"))
+
 	cobra.OnInitialize(initConfig)
 
 	// Here you will define your flags and configuration settings.
@@ -59,6 +61,11 @@ func init() {
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+
+	RootCmd.PersistentFlags().BoolP("verbose", "v", false, "Log more stuff")
+	RootCmd.PersistentFlags().StringP("bucket", "b", "", "Bucket to operate against")
+
+	viper.BindPFlags(RootCmd.PersistentFlags())
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -68,7 +75,7 @@ func initConfig() {
 	}
 
 	viper.SetConfigName(".s3web") // name of config file (without extension)
-	viper.AddConfigPath("$HOME")  // adding home directory as first search path
+	viper.AddConfigPath(".")      // use current dir for config
 	viper.AutomaticEnv()          // read in environment variables that match
 
 	// If a config file is found, read it in.
